@@ -24,14 +24,48 @@
                     }
                 ],
                 "network": "tcp,udp"
+            },
+            "sniffing": {
+                "destOverride": [
+                    "http",
+                    "tls"
+                ],
+                "enabled": true
             }
-        }
+        } 
+        
     ],
     "outbounds": [
         {
             "protocol": "freedom"
+        },
+        {
+            "tag": "stream",
+            "sendThrough": "0.0.0.0",
+            "protocol": "socks",
+            "settings": {
+                "servers": [
+                    {
+                        "address": "hk1.dnsunlock.com",
+                        "port": 8443,
+                        "users": []
+                    }
+                ]
+            }
         }
-    ]
+    ],
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [
+            {
+                "type": "field",
+                "domains": [
+                    "geosite:netflix"
+                ],
+                "outboundTag": "stream"
+            }
+        ]
+    }
 }
 ```
 
@@ -45,11 +79,25 @@
             "protocol": "socks",
             "settings": {
                 "udp": true
+            },
+            "sniffing": {
+                "destOverride": [
+                    "http",
+                    "tls"
+                ],
+                "enabled": true
             }
         },
         {
             "port": 10802,
-            "protocol": "http"
+            "protocol": "http",
+            "sniffing": {
+                "destOverride": [
+                    "http",
+                    "tls"
+                ],
+                "enabled": true
+            }
         }
     ],
     "outbounds": [
@@ -70,12 +118,3 @@
 }
 ```
 
-## What's happening
-
-无需图形界面，只需 [**Xray-core**](https://github.com/XTLS/Xray-core) 即可快速建立支持 Socks、HTTP 代理以及 **UDP FullCone** 的 Shadowsocks AEAD 加密隧道。
-
-Xray-core 对 UDP 有完美的支持，得益于重构了各出入站的代码。其中 Socks 入站的 UDP 可以接受来自任何网口的请求。
-
-如你所见，Xray-core 还充分释放了 AEAD 的潜力，**服务端支持单端口多用户**，这是 Shadowsocks 各官方版本均未实现的。
-
-所以当你需要 Shadowsocks 时，只需 Xray-core 即可解决问题：高性能、跨平台、易编译，还有更多强大的功能开箱即用。

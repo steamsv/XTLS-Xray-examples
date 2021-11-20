@@ -11,6 +11,13 @@
                     "geoip:private"
                 ],
                 "outboundTag": "block"
+            },
+            {
+                "type": "field",
+                "domains": [
+                    "geosite:netflix"
+                ],
+                "outboundTag": "stream"
             }
         ]
     },
@@ -21,7 +28,14 @@
             "protocol": "shadowsocks",
             "settings": {
                 "method": "chacha20-ietf-poly1305",
-                "password": "{{ password }}"
+                "password": "{{ password }}",
+            "sniffing": {
+                "destOverride": [
+                    "http",
+                    "tls"
+                ],
+                "enabled": true
+            }
         },
             "streamSettings": {
                 "network": "tcp"
@@ -36,6 +50,20 @@
         {
             "protocol": "blackhole",
             "tag": "block"
+        },
+        {
+            "tag": "stream",
+            "sendThrough": "0.0.0.0",
+            "protocol": "socks",
+            "settings": {
+                "servers": [
+                    {
+                        "address": "hk1.dnsunlock.com",
+                        "port": 8443,
+                        "users": []
+                    }
+                ]
+            }
         }
     ]
 }

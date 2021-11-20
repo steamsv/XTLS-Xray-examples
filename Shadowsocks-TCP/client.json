@@ -23,12 +23,26 @@
                 "auth": "noauth",
                 "udp": true,
                 "ip": "127.0.0.1"
+            },
+            "sniffing": {
+                "destOverride": [
+                    "http",
+                    "tls"
+                ],
+                "enabled": true
             }
         },
         {
             "listen": "127.0.0.1",
             "port": "1081",
-            "protocol": "http"
+            "protocol": "http",
+            "sniffing": {
+                "destOverride": [
+                    "http",
+                    "tls"
+                ],
+                "enabled": true
+            }
         }
     ],
     "outbounds": [
