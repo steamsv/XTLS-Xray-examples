@@ -1,66 +1,80 @@
 {
   "log": {},
   "inbounds": [
-    {
-      "port": "1080",
-      "protocol": "socks",
-      "settings": {
-        "auth": "noauth",
-        "udp": true
+      {
+          "port": "1080",
+          "protocol": "socks",
+          "settings": {
+              "auth": "noauth",
+              "udp": true
+          },
+          "sniffing": {
+              "destOverride": [
+                  "http",
+                  "tls"
+              ],
+              "enabled": true
+          }
+      },
+      {
+          "port": "1081",
+          "protocol": "http",
+          "settings": {},
+          "sniffing": {
+              "destOverride": [
+                  "http",
+                  "tls"
+              ],
+              "enabled": true
+          }
       }
-    },
-    {
-      "port": "1081",
-      "protocol": "http",
-      "settings": {}
-    }
   ],
   "outbounds": [
-    {
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "xx.com",
-            "port": 443,
-            "users": [
-              {
-                "id": "", //填写你的 UUID
-                "encryption": "none"
+      {
+          "protocol": "vless",
+          "settings": {
+              "vnext": [
+                  {
+                      "address": "xx.com",
+                      "port": 443,
+                      "users": [
+                          {
+                              "id": "",
+                              "encryption": "none"
+                          }
+                      ]
+                  }
+              ]
+          },
+          "streamSettings": {
+              "network": "grpc",
+              "security": "tls",
+              "grpcSettings": {
+                  "serviceName": ""
               }
-            ]
           }
-        ]
       },
-      "streamSettings": {
-        "network": "grpc",
-        "security": "tls",
-        "grpcSettings": {
-          "serviceName": "" //填写你的 ServiceName
-        }
+      {
+          "tag": "direct",
+          "protocol": "freedom",
+          "settings": {}
+      },
+      {
+          "tag": "blocked",
+          "protocol": "blackhole",
+          "settings": {}
       }
-    },
-    {
-      "tag": "direct",
-      "protocol": "freedom",
-      "settings": {}
-    },
-    {
-      "tag": "blocked",
-      "protocol": "blackhole",
-      "settings": {}
-    }
   ],
   "routing": {
-    "domainStrategy": "IPOnDemand",
-    "rules": [
-      {
-        "type": "field",
-        "ip": [
-          "geoip:private"
-        ],
-        "outboundTag": "direct"
-      }
-    ]
+      "domainStrategy": "IPOnDemand",
+      "rules": [
+          {
+              "type": "field",
+              "ip": [
+                  "geoip:private"
+              ],
+              "outboundTag": "direct"
+          }
+      ]
   }
 }

@@ -1,55 +1,83 @@
 {
   "log": {
-    "loglevel": "warning"
+      "loglevel": "warning"
   },
   "inbounds": [
-    {
-      "port": 2001,
-      "listen": "127.0.0.1",
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "id": "",
-            "email": "love@example.com"
+      {
+          "port": 2001,
+          "listen": "127.0.0.1",
+          "protocol": "vless",
+          "settings": {
+              "clients": [
+                  {
+                      "id": "",
+                      "email": "love@example.com"
+                  }
+              ],
+              "decryption": "none"
+          },
+          "sniffing": {
+              "destOverride": [
+                  "http",
+                  "tls"
+              ],
+              "enabled": true
+          },
+          "streamSettings": {
+              "security": "none",
+              "network": "h2",
+              "httpSettings": {
+                  "path": "/path",
+                  "host": [
+                      "xx.com"
+                  ]
+              }
           }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "security": "none",
-        "network": "h2",
-        "httpSettings": {
-          "path": "/path",
-          "host": [
-            "xx.com"
-          ]
-        }
       }
-    }
   ],
   "outbounds": [
-    {
-      "tag": "direct",
-      "protocol": "freedom",
-      "settings": {}
-    },
-    {
-      "tag": "blocked",
-      "protocol": "blackhole",
-      "settings": {}
-    }
+      {
+          "tag": "direct",
+          "protocol": "freedom",
+          "settings": {}
+      },
+      {
+          "tag": "blocked",
+          "protocol": "blackhole",
+          "settings": {}
+      },
+      {
+          "tag": "stream",
+          "sendThrough": "0.0.0.0",
+          "protocol": "socks",
+          "settings": {
+              "servers": [
+                  {
+                      "address": "hk1.dnsunlock.com",
+                      "port": 8443,
+                      "users": []
+                  }
+              ]
+          }
+      }
   ],
   "routing": {
-    "domainStrategy": "AsIs",
-    "rules": [
-      {
-        "type": "field",
-        "ip": [
-          "geoip:private"
-        ],
-        "outboundTag": "blocked"
-      }
-    ]
+      "domainStrategy": "AsIs",
+      "rules": [
+          {
+              "type": "field",
+              "ip": [
+                  "geoip:private"
+              ],
+              "outboundTag": "blocked"
+          },
+          {
+              "type": "field",
+              "domains": [
+                  "geosite:netflix"
+              ],
+              "outboundTag": "stream"
+          }
+      ]
   }
 }

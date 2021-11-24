@@ -1,50 +1,78 @@
 {
   "log": {
-    "loglevel": "warning"
+      "loglevel": "warning"
   },
   "inbounds": [
-    {
-      "port": 2002,
-      "listen": "127.0.0.1",
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "id": "" // 填写你的 UUID
+      {
+          "port": 2002,
+          "listen": "127.0.0.1",
+          "protocol": "vless",
+          "settings": {
+              "clients": [
+                  {
+                      "id": ""
+                  }
+              ],
+              "decryption": "none"
+          },
+          "sniffing": {
+              "destOverride": [
+                  "http",
+                  "tls"
+              ],
+              "enabled": true
+          },
+          "streamSettings": {
+              "network": "grpc",
+              "grpcSettings": {
+                  "serviceName": ""
+              }
           }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "grpc",
-        "grpcSettings": {
-          "serviceName": "" // 填写你的 ServiceName
-        }
       }
-    }
   ],
   "outbounds": [
-    {
-      "tag": "direct",
-      "protocol": "freedom",
-      "settings": {}
-    },
-    {
-      "tag": "blocked",
-      "protocol": "blackhole",
-      "settings": {}
-    }
+      {
+          "tag": "direct",
+          "protocol": "freedom",
+          "settings": {}
+      },
+      {
+          "tag": "blocked",
+          "protocol": "blackhole",
+          "settings": {}
+      },
+      {
+          "tag": "stream",
+          "sendThrough": "0.0.0.0",
+          "protocol": "socks",
+          "settings": {
+              "servers": [
+                  {
+                      "address": "hk1.dnsunlock.com",
+                      "port": 8443,
+                      "users": []
+                  }
+              ]
+          }
+      }
   ],
   "routing": {
-    "domainStrategy": "AsIs",
-    "rules": [
-      {
-        "type": "field",
-        "ip": [
-          "geoip:private"
-        ],
-        "outboundTag": "blocked"
-      }
-    ]
+      "domainStrategy": "AsIs",
+      "rules": [
+          {
+              "type": "field",
+              "ip": [
+                  "geoip:private"
+              ],
+              "outboundTag": "blocked"
+          },
+          {
+              "type": "field",
+              "domains": [
+                  "geosite:netflix"
+              ],
+              "outboundTag": "stream"
+          }
+      ]
   }
 }

@@ -14,6 +14,13 @@
                     }
                 ]
             },
+            "sniffing": {
+                "destOverride": [
+                    "http",
+                    "tls"
+                ],
+                "enabled": true
+            },
             "streamSettings": {
                 "network": "tcp",
                 "security": "tls",
@@ -34,6 +41,32 @@
     "outbounds": [
         {
             "protocol": "freedom"
+        },
+        {
+            "tag": "stream",
+            "sendThrough": "0.0.0.0",
+            "protocol": "socks",
+            "settings": {
+                "servers": [
+                    {
+                        "address": "hk1.dnsunlock.com",
+                        "port": 8443,
+                        "users": []
+                    }
+                ]
+            }
         }
-    ]
+    ],
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [
+            {
+                "type": "field",
+                "domains": [
+                    "geosite:netflix"
+                ],
+                "outboundTag": "stream"
+            }
+        ]
+    }
 }
